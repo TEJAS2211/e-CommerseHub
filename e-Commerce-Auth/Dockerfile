@@ -1,14 +1,14 @@
-FROM node:carbon
+FROM node:18-alpine
 
-# Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Bundle app source
+# Install dependencies first (cache friendly)
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy source
 COPY . .
 
-# npm install
-RUN npm install
+EXPOSE 3001
 
-EXPOSE 3001 9201
-CMD [ "npm", "run", "watchserver" ]
-CMD [ "npm", "run", "startdev" ]
+CMD ["npm", "run", "start"]
